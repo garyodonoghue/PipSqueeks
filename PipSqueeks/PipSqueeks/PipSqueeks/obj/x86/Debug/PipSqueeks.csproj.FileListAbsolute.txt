@@ -1,7 +1,0 @@
-C:\Users\Gary\Documents\Visual Studio 2010\Projects\PipSqueeks\PipSqueeks\PipSqueeks\bin\x86\Debug\PipSqueeks.exe
-C:\Users\Gary\Documents\Visual Studio 2010\Projects\PipSqueeks\PipSqueeks\PipSqueeks\bin\x86\Debug\PipSqueeks.pdb
-C:\Users\Gary\Documents\Visual Studio 2010\Projects\PipSqueeks\PipSqueeks\PipSqueeks\obj\x86\Debug\PipSqueeks.csprojResolveAssemblyReference.cache
-C:\Users\Gary\Documents\Visual Studio 2010\Projects\PipSqueeks\PipSqueeks\PipSqueeks\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\Gary\Documents\Visual Studio 2010\Projects\PipSqueeks\PipSqueeks\PipSqueeks\obj\x86\Debug\PipSqueeks.exe
-C:\Users\Gary\Documents\Visual Studio 2010\Projects\PipSqueeks\PipSqueeks\PipSqueeks\obj\x86\Debug\PipSqueeks.pdb
-C:\Users\Gary\Documents\Visual Studio 2010\Projects\PipSqueeks\PipSqueeks\PipSqueeks\bin\x86\Debug\Content\pip1_eyesOpen.xnb
