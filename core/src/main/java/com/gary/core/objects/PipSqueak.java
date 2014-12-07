@@ -16,9 +16,10 @@ public class PipSqueak{
 	private final World world;
 	private Body pipBody;
 	float playerSize = 3f;
-	private Body feet;
+	private Body frontFoot;
 	
 	public boolean facingRight = true;
+	private Body backFoot;
 	
 	public PipSqueak(World world, Vector2 startPos) {
 		this.world = world;
@@ -32,14 +33,14 @@ public class PipSqueak{
 		bodyDef.position
 				.set(position.x, position.y);
 
-		bodyDef.fixedRotation = true;
+		bodyDef.fixedRotation = false;
 		this.pipBody = world.createBody(bodyDef);
 
 		CircleShape dynamicCircle = new CircleShape();
 		dynamicCircle.setRadius(playerSize);
 
 		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.density = 10.0f;
+		fixtureDef.density = 15.0f;
 		fixtureDef.friction = 0.3f;
 		fixtureDef.restitution = 0.5f;
 		fixtureDef.shape = dynamicCircle;
@@ -60,8 +61,9 @@ public class PipSqueak{
 		bodyDef.position.set(pipBodyCenterPosition.x, pipBodyCenterPosition.y-2.5f);
 		bodyDef.fixedRotation = false; //want feel to be able to rotate
 
-		this.feet = world.createBody(bodyDef);
-
+		this.frontFoot = world.createBody(bodyDef);
+		this.backFoot = world.createBody(bodyDef);
+		
 		FixtureDef fixtureDef = new FixtureDef();
 		PolygonShape boxShape = new PolygonShape();
 		boxShape.setAsBox(3f, 1.25f);
@@ -70,24 +72,24 @@ public class PipSqueak{
 		fixtureDef.density = 1f;
 		fixtureDef.friction = 0.3f;
 
-		feet.createFixture(fixtureDef);
-
+		frontFoot.createFixture(fixtureDef);
+		backFoot.createFixture(fixtureDef);
+		
 		boxShape.dispose();
 
 		//create a joint at the point where the feet and body meet
 		//will need to dynamically destroy/create joints for when facing left/right and call respective left/right joint creation methods
 		createFeetJointWhenFacingRight(pipBodyCenterPosition);
 		
-		this.feet.setUserData(new CollisionInfo("Hit feet", CollisionObjectType.PipSqueakFeet, this));
+		this.frontFoot.setUserData(new CollisionInfo("Hit front foot", CollisionObjectType.PipSqueakFeet, this));
+		this.backFoot.setUserData(new CollisionInfo("Hit back foot", CollisionObjectType.PipSqueakFeet, this));
 
 	}
 
 	public void createFeetJointWhenFacingLeft(Vector2 pipBodyCenterPosition) {
 		RevoluteJointDef revoJoint = new RevoluteJointDef();
-		revoJoint.initialize(this.pipBody, this.feet, new Vector2(pipBodyCenterPosition.x+3, pipBodyCenterPosition.y-1f)); 
-		
-		//TODO work out this position - it will be 0.75 from the bottom of the body, 
-		//and either on the left or right depending on which way the pip is facing
+		revoJoint.initialize(this.pipBody, this.frontFoot, new Vector2(pipBodyCenterPosition.x+3, pipBodyCenterPosition.y-1f)); 
+	
 		revoJoint.collideConnected = false;
 		revoJoint.enableLimit = true;
 
@@ -95,15 +97,23 @@ public class PipSqueak{
 	}
 	
 	public void createFeetJointWhenFacingRight(Vector2 pipBodyCenterPosition) {
-		RevoluteJointDef revoJoint = new RevoluteJointDef();
-		revoJoint.initialize(this.pipBody, this.feet, new Vector2(pipBodyCenterPosition.x-3, pipBodyCenterPosition.y-1f)); 
+		RevoluteJointDef revoFFJoint = new RevoluteJointDef();
+		revoFFJoint.initialize(this.pipBody, this.frontFoot, new Vector2(pipBodyCenterPosition.x-3, pipBodyCenterPosition.y-1f)); 
+		
+		RevoluteJointDef revoBFJoint = new RevoluteJointDef();
+		revoBFJoint.initialize(this.pipBody, this.backFoot, new Vector2(pipBodyCenterPosition.x-3, pipBodyCenterPosition.y-1f)); 
 		
 		//TODO work out this position - it will be 0.75 from the bottom of the body, 
 		//and either on the left or right depending on which way the pip is facing
-		revoJoint.collideConnected = false;
-		revoJoint.enableLimit = true;
+		revoFFJoint.collideConnected = false;
+		revoFFJoint.enableLimit = true;
 
-		world.createJoint(revoJoint);
+		world.createJoint(revoFFJoint);
+		
+		revoBFJoint.collideConnected = false;
+		revoBFJoint.enableLimit = true;
+
+		world.createJoint(revoBFJoint);
 	}
 	
 	public void updateMovement(float delta) {

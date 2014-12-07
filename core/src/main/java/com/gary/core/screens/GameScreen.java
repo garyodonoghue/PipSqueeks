@@ -59,8 +59,6 @@ public class GameScreen implements Screen {
 		world.clearForces();
 		
 		this.spriteBatch.end();
-		
-		PipSqueak pip = new PipSqueak(this.world, this.center);
 	}
 
 	@Override
@@ -72,6 +70,8 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		world = new World(new Vector2(0.0f, 0.0f), true);
+		
+		PipSqueak pip = new PipSqueak(this.world, center);
 	}
 
 	@Override
