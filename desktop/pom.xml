@@ -38,14 +38,24 @@
 			<artifactId>gdx-platform</artifactId>
 			<classifier>natives-desktop</classifier>
 		</dependency>
+
+		<dependency>
+	     <groupId>com.badlogicgames.gdx</groupId>
+   		 <artifactId>gdx-box2d-platform</artifactId>
+   		 <classifier>natives-desktop</classifier>
+    	<version>${gdx.version}</version>
+    	<scope>compile</scope>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
-		<resources>
-			<resource>
-				<directory>../assets</directory>
-			</resource>
-		</resources>
+	<resources>
+		<resource>
+		<directory>../assets</directory>
+	</resource>
+	</resources>
 
 		<plugins>
 			<!-- this run the game when you invoke: mvn integration-test -Pdesktop -->
