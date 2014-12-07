@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.gary.core.LevelGenerator;
 import com.gary.core.PipSqueaksGame;
 import com.gary.core.objects.PipSqueak;
 
@@ -70,6 +71,8 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 		world = new World(new Vector2(0.0f, 0.0f), true);
+		
+		LevelGenerator.generateLevel(world);
 		
 		PipSqueak pip = new PipSqueak(this.world, center);
 	}
