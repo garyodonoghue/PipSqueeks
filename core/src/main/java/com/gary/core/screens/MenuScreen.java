@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -27,6 +28,7 @@ public class MenuScreen implements Screen
 	private final int worldWidth;
 	private OrthographicCamera camera;
 	//private Texture logoTexture;
+	private float blinkDelta = 0f;
 
 	public MenuScreen(PipSqueaksGame pipSqueaksGame) {
 		this.spriteBatch = new SpriteBatch();
@@ -45,6 +47,9 @@ public class MenuScreen implements Screen
 
 	@Override
 	public void render(float delta) {
+		
+		blinkDelta = blinkDelta + delta;
+		
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -58,6 +63,19 @@ public class MenuScreen implements Screen
 		
 		stage.act(delta);
 	    stage.draw();
+	    
+	    if(blinkDelta > 0.5){
+	    	blinkDelta = 0;
+	    	
+	    	for(Actor actor : stage.getActors()){
+	    		if(actor.isVisible()){
+	    			actor.setVisible(false);
+	    		}
+	    		else{
+	    			actor.setVisible(true);
+	    		}
+	    	}
+	    }
 	    
 	}
 	
