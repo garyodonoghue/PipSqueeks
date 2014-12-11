@@ -1,20 +1,21 @@
 package com.gary.core.screens;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.gary.core.PipSqueaksGame;
+import com.gary.core.controllers.Xbox360Pad;
+import com.gary.core.objects.Player;
  
 public class MenuScreen implements Screen
 {
@@ -29,7 +30,9 @@ public class MenuScreen implements Screen
 	private OrthographicCamera camera;
 	//private Texture logoTexture;
 	private float blinkDelta = 0f;
-
+	private static int numberOfPlayers = 0;
+	private List<Player> listPlayers;
+	 
 	public MenuScreen(PipSqueaksGame pipSqueaksGame) {
 		this.spriteBatch = new SpriteBatch();
 		//this.logoTexture = new Texture(Gdx.files.internal("logo.png"));
@@ -64,10 +67,34 @@ public class MenuScreen implements Screen
 		stage.act(delta);
 	    stage.draw();
 	    
-	    if(blinkDelta > 0.5){
+	    blinkText();
+	    
+	    assignControls();
+	    
+	}
+
+	private void assignControls() {
+		Gdx.app.log("Number of connected controllers: ", ""+Controllers.getControllers().size);
+		for (Controller controller : Controllers.getControllers()) {
+		    Gdx.app.log("controller connected with name: ", controller.getName());
+		   
+		    //check if player pressed the start button, create and assign a new player
+		    if(controller.getButton(Xbox360Pad.BUTTON_START)){
+		    	Player player = new Player(controller);
+		    	if(listPlayers.contains(player)) break;
+		    	numberOfPlayers += 1;
+		    	listPlayers.add(player);
+		    }
+		}
+	}
+
+	private void blinkText() {
+		if(blinkDelta > 0.5){
 	    	blinkDelta = 0;
 	    	
-	    	for(Actor actor : stage.getActors()){
+	    	for(int i = numberOfPlayers; i < stage.getActors().size; i++){
+	    		Actor actor = stage.getActors().get(i);
+	    		
 	    		if(actor.isVisible()){
 	    			actor.setVisible(false);
 	    		}
@@ -76,7 +103,6 @@ public class MenuScreen implements Screen
 	    		}
 	    	}
 	    }
-	    
 	}
 	
 	@Override
@@ -121,8 +147,8 @@ public class MenuScreen implements Screen
 	}
 	@Override
 	public void show() {
-		
 	}
+	
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub

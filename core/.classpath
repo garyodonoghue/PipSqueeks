@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="/Users/Gary/Desktop/gdx-controllers-desktop-natives.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/Gary/Documents/dev/git/belfast-hackathon/core/localJars/extensions/gdx-controllers/0.9.9/gdx-controllers-0.9.9.jar"/>
 	<classpathentry kind="src" output="target/classes" path="src/main/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
