@@ -16,26 +16,19 @@
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			</dependency>
-			
-			<dependency>
+		</dependency>
+		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-controllers</artifactId>
 			<version>${gdx.version}</version>
-			</dependency>
-			
-			<dependency>
-			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx-controllers-desktop</artifactId>
-			<version>${gdx.version}</version>
-			</dependency>
-			
-			<dependency>
+		</dependency>
+
+		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-box2d</artifactId>
 			<version>${gdx.version}</version>
 			<scope>compile</scope>
-			</dependency>
+		</dependency>
 	</dependencies>
 
 	<build>
