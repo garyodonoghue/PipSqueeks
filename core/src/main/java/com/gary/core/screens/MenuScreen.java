@@ -34,6 +34,7 @@ public class MenuScreen implements Screen
 	private float blinkDelta = 0f;
 	private static int numberOfPlayers = 0;
 	private List<Player> listPlayers;
+	private CharacterSelectScreen characterSelectScreen;
 	
 	public MenuScreen(PipSqueaksGame pipSqueaksGame) {
 		this.spriteBatch = new SpriteBatch();
@@ -93,6 +94,9 @@ public class MenuScreen implements Screen
 		    if(controller.getButton(Xbox360Pad.BUTTON_A)){
 		    	Gdx.app.log("A button pressed","");
 		    	Gdx.app.log("Start button pressed","");
+		    	
+		    	this.characterSelectScreen = new CharacterSelectScreen();
+		    	this.characterSelectScreen.setNumberOfPlayers(numberOfPlayers);
 		    }
 		}
 	}
