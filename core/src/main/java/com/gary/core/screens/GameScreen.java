@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		world = new World(new Vector2(0.0f, 0.0f), true);
+		world = new World(new Vector2(0.0f, -80.0f), true);
 		
 		LevelGenerator.generateLevel(world);
 		

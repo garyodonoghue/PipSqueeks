@@ -82,7 +82,7 @@ public class PipSqueak{
 		boxShape.setAsBox(3f, 1.25f);
 		fixtureDef.shape = boxShape;
 		fixtureDef.restitution = 0.3f;
-		fixtureDef.density = 1f;
+		fixtureDef.density = 15f;
 		fixtureDef.friction = 0.3f;
 
 		frontFoot.createFixture(fixtureDef);
