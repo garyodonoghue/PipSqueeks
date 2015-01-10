@@ -36,6 +36,7 @@ public class GameScreen implements Screen {
 	public static Vector2 center = new Vector2();
 	public static List<PipSqueak> pipSqueaks;
 	private Texture bodyTexture;
+	private Texture feetTexture;
 	private MyControllerListener myControllerListener;
 
 	public GameScreen(PipSqueaksGame game) {
@@ -56,7 +57,8 @@ public class GameScreen implements Screen {
 
 		this.debugRenderer = new Box2DDebugRenderer();
 		
-		bodyTexture  = new Texture(Gdx.files.internal("frenchy.png"));
+		bodyTexture  = new Texture(Gdx.files.internal("emo_left.png"));
+		feetTexture  = new Texture(Gdx.files.internal("emo_shoes_left.png"));
 		
 		pipSqueaks = new ArrayList<PipSqueak>();
 		
@@ -84,10 +86,10 @@ public class GameScreen implements Screen {
 	}
 
 	private void updatePipSqueakSprites() {
-		for(PipSqueak pipSqueak : pipSqueaks){
-			updateSprite(new Sprite(new Sprite(bodyTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
+		for(PipSqueak pipSqueak : pipSqueaks){ //the order needs to go back foot, body, front foot, so that there is the correct perception  of depth
+			updateSprite(new Sprite(new Sprite(feetTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
 			updateSprite(new Sprite(new Sprite(bodyTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
-			updateSprite(new Sprite(new Sprite(bodyTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());
+			updateSprite(new Sprite(new Sprite(feetTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());
 		}
 	}
 	public static void updateSprite(Sprite sprite, SpriteBatch spriteBatch,
@@ -117,7 +119,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		world = new World(new Vector2(0.0f, -80.0f), true);
+		world = new World(new Vector2(0.0f, -50.0f), true);
 		
 		LevelGenerator.generateLevel(world);
 		
@@ -125,12 +127,16 @@ public class GameScreen implements Screen {
 	}
 
 	private void createAndAssignPipsToControllers() {
+		
+//		PipSqueak pip1 = new PipSqueak(this.world, new Vector2(50, 50));
+//		pipSqueaks.add(pip1);		
+		
 		if(Controllers.getControllers() != null)
 		{
 			for(int i = 0; i<Controllers.getControllers().size; i++)
 			{
 				//move this into assignControllers() method
-				PipSqueak pip = new PipSqueak(this.world, center);
+				PipSqueak pip = new PipSqueak(this.world, new Vector2(50, 50));
 				pip.setController(Controllers.getControllers().get(i));
 				pipSqueaks.add(pip);			
 			}
