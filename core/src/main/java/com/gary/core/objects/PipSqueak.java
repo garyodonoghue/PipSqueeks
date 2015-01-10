@@ -45,6 +45,14 @@ public class PipSqueak{
 
 	public boolean facingRight = true;
 	
+	public boolean isFacingRight() {
+		return facingRight;
+	}
+
+	public void setFacingRight(boolean facingRight) {
+		this.facingRight = facingRight;
+	}
+
 	public PipSqueak(World world, Vector2 startPos) {
 		this.world = world;
 		createBody(startPos);
@@ -152,5 +160,9 @@ public class PipSqueak{
 	
 	public void jump(){
 		this.getPipBody().applyForce(new Vector2(0.0f, 10000.0f), this.getPipBody().getWorldCenter() , true );
+	}
+
+	public void move(float direction) {
+		this.getPipBody().applyForceToCenter(new Vector2(direction * 1000f, 0), true);
 	}
 }

@@ -15,8 +15,31 @@ public class MyControllerListener implements com.badlogic.gdx.controllers.Contro
 	}
 
 	@Override
-	public boolean axisMoved(Controller arg0, int arg1, float arg2) {
-		// TODO Auto-generated method stub
+	public boolean axisMoved(Controller controller, int axisCode, float value) {
+		//left analog
+		if(axisCode == Xbox360Pad.AXIS_LEFT_X){
+			for(PipSqueak pip : GameScreen.pipSqueaks){
+				if(pip.getController() == controller){
+					if(value<0){
+						pip.setFacingRight(false);
+					}
+					else{
+						pip.setFacingRight(true);
+					}
+					pip.move(value);
+				}
+			}
+		}
+		
+		//right analogue - used for aiming
+		if(axisCode == Xbox360Pad.AXIS_LEFT_X){
+			for(PipSqueak pip : GameScreen.pipSqueaks){
+				if(pip.getController() == controller){
+					//pip.changeAim();
+				}
+			}
+		}
+		
 		return false;
 	}
 

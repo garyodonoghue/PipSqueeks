@@ -35,8 +35,12 @@ public class GameScreen implements Screen {
 	private World world;
 	public static Vector2 center = new Vector2();
 	public static List<PipSqueak> pipSqueaks;
-	private Texture bodyTexture;
-	private Texture feetTexture;
+	private Texture bodyLeftTexture;
+	private Texture feetLeftTexture;
+	
+	private Texture bodyRightTexture;
+	private Texture feetRightTexture;
+	
 	private MyControllerListener myControllerListener;
 
 	public GameScreen(PipSqueaksGame game) {
@@ -57,9 +61,12 @@ public class GameScreen implements Screen {
 
 		this.debugRenderer = new Box2DDebugRenderer();
 		
-		bodyTexture  = new Texture(Gdx.files.internal("emo_left.png"));
-		feetTexture  = new Texture(Gdx.files.internal("emo_shoes_left.png"));
+		bodyLeftTexture  = new Texture(Gdx.files.internal("emo_left.png"));
+		feetLeftTexture  = new Texture(Gdx.files.internal("emo_shoes_left.png"));
 		
+		bodyRightTexture  = new Texture(Gdx.files.internal("emo_right.png"));
+		feetRightTexture  = new Texture(Gdx.files.internal("emo_shoes_right.png"));
+
 		pipSqueaks = new ArrayList<PipSqueak>();
 		
 		myControllerListener = new MyControllerListener();
@@ -87,9 +94,16 @@ public class GameScreen implements Screen {
 
 	private void updatePipSqueakSprites() {
 		for(PipSqueak pipSqueak : pipSqueaks){ //the order needs to go back foot, body, front foot, so that there is the correct perception  of depth
-			updateSprite(new Sprite(new Sprite(feetTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
-			updateSprite(new Sprite(new Sprite(bodyTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
-			updateSprite(new Sprite(new Sprite(feetTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());
+			if(pipSqueak.facingRight){
+				updateSprite(new Sprite(new Sprite(feetRightTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
+				updateSprite(new Sprite(new Sprite(bodyRightTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
+				updateSprite(new Sprite(new Sprite(feetRightTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());			
+			}
+			else{
+				updateSprite(new Sprite(new Sprite(feetLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
+				updateSprite(new Sprite(new Sprite(bodyLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
+				updateSprite(new Sprite(new Sprite(feetLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());				
+			}
 		}
 	}
 	public static void updateSprite(Sprite sprite, SpriteBatch spriteBatch,
