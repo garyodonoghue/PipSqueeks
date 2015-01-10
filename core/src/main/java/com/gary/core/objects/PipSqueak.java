@@ -13,13 +13,26 @@ import com.gary.core.collision.CollisionObjectType;
 
 public class PipSqueak{
 
+	public Body getPipBody() {
+		return pipBody;
+	}
+
+	public Body getFrontFoot() {
+		return frontFoot;
+	}
+
+	public Body getBackFoot() {
+		return backFoot;
+	}
+
 	private final World world;
-	private Body pipBody;
 	float playerSize = 3f;
+
+	private Body pipBody;
 	private Body frontFoot;
+	private Body backFoot;
 	
 	public boolean facingRight = true;
-	private Body backFoot;
 	
 	public PipSqueak(World world, Vector2 startPos) {
 		this.world = world;

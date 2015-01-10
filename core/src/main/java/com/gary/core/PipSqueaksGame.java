@@ -23,13 +23,13 @@ public class PipSqueaksGame extends Game {
 	public void create() 
 	{
 		createScreens();
-		//setScreen(gameScreen);
-		setScreen(menuScreen);
+		setScreen(gameScreen);
+		//setScreen(menuScreen);
 	}
 	
 	private void createScreens() 
 	{
-		//this.gameScreen = new GameScreen(this);
-		this.menuScreen = new MenuScreen(this);
+		this.gameScreen = new GameScreen(this);
+		//this.menuScreen = new MenuScreen(this);
 	}
 }

@@ -1,12 +1,18 @@
 package com.gary.core.screens;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gary.core.LevelGenerator;
@@ -26,6 +32,8 @@ public class GameScreen implements Screen {
 	private Box2DDebugRenderer debugRenderer;
 	private World world;
 	public static Vector2 center = new Vector2();
+	private List<PipSqueak> pipSqueaks;
+	private Texture bodyTexture;
 	
 	public GameScreen(PipSqueaksGame game) {
 		this.game = game;
@@ -44,6 +52,10 @@ public class GameScreen implements Screen {
 		this.spriteBatch = new SpriteBatch();
 
 		this.debugRenderer = new Box2DDebugRenderer();
+		
+		bodyTexture  = new Texture(Gdx.files.internal("frenchy.png"));
+		
+		pipSqueaks = new ArrayList<PipSqueak>();
 	}
 	
 	@Override
@@ -57,12 +69,40 @@ public class GameScreen implements Screen {
 		camera.update();
 		spriteBatch.setProjectionMatrix(camera.combined);
 
+		updatePipSqueakSprites();
+		
 		world.step(Gdx.app.getGraphics().getDeltaTime(), 10, 10);
 		world.clearForces();
 		
 		this.spriteBatch.end();
 	}
 
+	private void updatePipSqueakSprites() {
+		for(PipSqueak pipSqueak : pipSqueaks){
+			updateSprite(new Sprite(new Sprite(bodyTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
+			updateSprite(new Sprite(new Sprite(bodyTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
+			updateSprite(new Sprite(new Sprite(bodyTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());
+		}
+	}
+	public static void updateSprite(Sprite sprite, SpriteBatch spriteBatch,
+			int PIXELS_PER_METER, Body body) {
+		if (sprite != null && spriteBatch != null && body != null) {
+			setSpritePosition(sprite, PIXELS_PER_METER, body);
+			sprite.draw(spriteBatch);
+		}
+	}
+	
+	public static void setSpritePosition(Sprite sprite, int PIXELS_PER_METER,
+			Body body) {
+
+		sprite.setPosition(
+				PIXELS_PER_METER * body.getWorldCenter().x - sprite.getWidth()
+						/ 2, PIXELS_PER_METER * body.getWorldCenter().y
+						- sprite.getHeight() / 2);
+
+		sprite.setRotation((MathUtils.radiansToDegrees * body.getAngle()));
+	}	
+	
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
@@ -76,6 +116,7 @@ public class GameScreen implements Screen {
 		LevelGenerator.generateLevel(world);
 		
 		PipSqueak pip = new PipSqueak(this.world, center);
+		pipSqueaks.add(pip);
 	}
 
 	@Override
