@@ -1,4 +1,5 @@
 package com.gary.core.objects;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -32,6 +33,16 @@ public class PipSqueak{
 	private Body frontFoot;
 	private Body backFoot;
 	
+	private Controller controller;
+	
+	public Controller getController() {
+		return controller;
+	}
+
+	public void setController(Controller controller) {
+		this.controller = controller;
+	}
+
 	public boolean facingRight = true;
 	
 	public PipSqueak(World world, Vector2 startPos) {
@@ -129,7 +140,7 @@ public class PipSqueak{
 		world.createJoint(revoBFJoint);
 	}
 	
-	public void updateMovement(float delta) {
-
+	public void jump(){
+		this.getPipBody().applyForce(this.getPipBody().getWorldVector(new Vector2(0.0f, 130000.0f)), this.getPipBody().getWorldCenter() , true );
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.gary.core.LevelGenerator;
 import com.gary.core.PipSqueaksGame;
+import com.gary.core.controllers.MyControllerListener;
 import com.gary.core.objects.PipSqueak;
 
 public class GameScreen implements Screen {
@@ -32,9 +34,10 @@ public class GameScreen implements Screen {
 	private Box2DDebugRenderer debugRenderer;
 	private World world;
 	public static Vector2 center = new Vector2();
-	private List<PipSqueak> pipSqueaks;
+	public static List<PipSqueak> pipSqueaks;
 	private Texture bodyTexture;
-	
+	private MyControllerListener myControllerListener;
+
 	public GameScreen(PipSqueaksGame game) {
 		this.game = game;
 
@@ -56,6 +59,9 @@ public class GameScreen implements Screen {
 		bodyTexture  = new Texture(Gdx.files.internal("frenchy.png"));
 		
 		pipSqueaks = new ArrayList<PipSqueak>();
+		
+		myControllerListener = new MyControllerListener();
+		Controllers.addListener(myControllerListener);
 	}
 	
 	@Override
@@ -115,8 +121,20 @@ public class GameScreen implements Screen {
 		
 		LevelGenerator.generateLevel(world);
 		
-		PipSqueak pip = new PipSqueak(this.world, center);
-		pipSqueaks.add(pip);
+		createAndAssignPipsToControllers();
+	}
+
+	private void createAndAssignPipsToControllers() {
+		if(Controllers.getControllers() != null)
+		{
+			for(int i = 0; i<Controllers.getControllers().size; i++)
+			{
+				//move this into assignControllers() method
+				PipSqueak pip = new PipSqueak(this.world, center);
+				pip.setController(Controllers.getControllers().get(i));
+				pipSqueaks.add(pip);			
+			}
+		}
 	}
 
 	@Override
