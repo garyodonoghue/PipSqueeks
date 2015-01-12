@@ -40,6 +40,7 @@ public class GameScreen implements Screen {
 	
 	private Texture bodyRightTexture;
 	private Texture feetRightTexture;
+	private Texture weaponTexture;
 	
 	private MyControllerListener myControllerListener;
 
@@ -66,6 +67,8 @@ public class GameScreen implements Screen {
 		
 		bodyRightTexture  = new Texture(Gdx.files.internal("emo_right.png"));
 		feetRightTexture  = new Texture(Gdx.files.internal("emo_shoes_right.png"));
+		
+		weaponTexture  = new Texture(Gdx.files.internal("emo_shoes_right.png"));
 
 		pipSqueaks = new ArrayList<PipSqueak>();
 		
@@ -95,11 +98,15 @@ public class GameScreen implements Screen {
 	private void updatePipSqueakSprites() {
 		for(PipSqueak pipSqueak : pipSqueaks){ //the order needs to go back foot, body, front foot, so that there is the correct perception  of depth
 			if(pipSqueak.facingRight){
+				updateSprite(new Sprite(new Sprite(weaponTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getWeaponBody());			
+
 				updateSprite(new Sprite(new Sprite(feetRightTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
 				updateSprite(new Sprite(new Sprite(bodyRightTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
 				updateSprite(new Sprite(new Sprite(feetRightTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());			
 			}
 			else{
+				updateSprite(new Sprite(new Sprite(weaponTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getWeaponBody());			
+				
 				updateSprite(new Sprite(new Sprite(feetLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
 				updateSprite(new Sprite(new Sprite(bodyLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
 				updateSprite(new Sprite(new Sprite(feetLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());				
