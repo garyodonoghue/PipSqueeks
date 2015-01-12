@@ -163,6 +163,6 @@ public class PipSqueak{
 	}
 
 	public void move(float direction) {
-		this.getPipBody().applyForceToCenter(new Vector2(direction * 1000f, 0), true);
+		this.getPipBody().setLinearVelocity(new Vector2(direction * 10f, 0));
 	}
 }

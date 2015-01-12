@@ -20,7 +20,7 @@ public class MyControllerListener implements com.badlogic.gdx.controllers.Contro
 		if(axisCode == Xbox360Pad.AXIS_LEFT_X){
 			for(PipSqueak pip : GameScreen.pipSqueaks){
 				if(pip.getController() == controller){
-					if(value<0){
+					if(value<=0){
 						pip.setFacingRight(false);
 					}
 					else{
