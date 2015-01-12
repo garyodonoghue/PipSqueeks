@@ -20,19 +20,20 @@ public class PipSqueak{
 	private Body pipBody;
 	private Body frontFoot;
 	private Body backFoot;
-	private Body weaponBody;
 	
+	private Weapon weapon;
+	
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
+	public void setWeapon(Weapon weapon) {
+		this.weapon = weapon;
+	}
+
 	private Controller controller;
 
 	public boolean facingRight = true;
-
-	public Body getWeaponBody() {
-		return weaponBody;
-	}
-
-	public void setWeaponBody(Body weaponBody) {
-		this.weaponBody = weaponBody;
-	}
 
 	public Body getPipBody() {
 		return pipBody;
@@ -68,32 +69,8 @@ public class PipSqueak{
 		this.world = world;
 		createBody(startPos);
 		createPipSqueakFeet();
-		createWeaponSensor();
-	}
-
-	private void createWeaponSensor() {
-		Vector2 pipBodyCenterPosition = this.pipBody.getWorldCenter();
-
-		BodyDef weaponSensorDef = new BodyDef();
-		weaponSensorDef.type = BodyType.StaticBody;
 		
-		//TODO want to position this at 'shoulder height'
-		weaponSensorDef.position.set(pipBodyCenterPosition.x - 10, pipBodyCenterPosition.y + 10);
-		weaponSensorDef.fixedRotation = false; //want to be able to 'rotate' the gun when aiming 
-
-		this.weaponBody = world.createBody(weaponSensorDef);
-		
-		FixtureDef fixtureDef = new FixtureDef();
-		PolygonShape boxShape = new PolygonShape();
-		boxShape.setAsBox(6f, 2.25f);
-		fixtureDef.shape = boxShape;
-		fixtureDef.isSensor = true;
-		
-		weaponBody.createFixture(fixtureDef);
-		
-		boxShape.dispose();
-
-		this.weaponBody.setUserData(new CollisionInfo("Hit gun", CollisionObjectType.Weapon, this));
+		weapon = new Weapon(this.pipBody, world);
 	}
 
 	private void createBody(Vector2 position) {
@@ -201,4 +178,5 @@ public class PipSqueak{
 	public void move(float direction) {
 		this.getPipBody().setLinearVelocity(new Vector2(direction * 10f, 0));
 	}
+
 }

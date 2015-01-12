@@ -31,14 +31,15 @@ public class MyControllerListener implements com.badlogic.gdx.controllers.Contro
 			}
 		}
 		
-		//right analogue - used for aiming
-		if(axisCode == Xbox360Pad.AXIS_LEFT_X){
+		//TODO: right analogue - used for aiming
+		if(axisCode == Xbox360Pad.AXIS_RIGHT_X){
 			for(PipSqueak pip : GameScreen.pipSqueaks){
 				if(pip.getController() == controller){
-					//pip.changeAim();
+					pip.getWeapon().changeAim(value);
 				}
 			}
 		}
+				
 		
 		return false;
 	}
@@ -52,6 +53,15 @@ public class MyControllerListener implements com.badlogic.gdx.controllers.Contro
 			for(PipSqueak pip : GameScreen.pipSqueaks){
 				if(pip.getController() == controller){
 					pip.jump();
+				}
+			}
+		}
+		
+		//shoot
+		if(buttonCode == Xbox360Pad.AXIS_RIGHT_TRIGGER){
+			for(PipSqueak pip : GameScreen.pipSqueaks){
+				if(pip.getController() == controller){
+					pip.getWeapon().shoot();
 				}
 			}
 		}
