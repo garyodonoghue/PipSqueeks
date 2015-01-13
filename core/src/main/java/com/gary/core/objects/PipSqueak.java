@@ -114,7 +114,7 @@ public class PipSqueak{
 		boxShape.setAsBox(3f, 2.25f);
 		fixtureDef.shape = boxShape;
 		fixtureDef.restitution = 0.3f;
-		fixtureDef.density = 0.1f;
+		fixtureDef.density = 0.0f;
 		fixtureDef.friction = 0.3f;
 
 		frontFoot.createFixture(fixtureDef);
@@ -176,7 +176,7 @@ public class PipSqueak{
 	}
 
 	public void move(float direction) {
-		this.getPipBody().setLinearVelocity(new Vector2(direction * 10f, 0));
+		this.getPipBody().setLinearVelocity(new Vector2(direction * 100f, 0));
 	}
 
 }
