@@ -17,13 +17,13 @@ public class LevelGenerator {
 		//generate platforms
 		for(int i = 1; i<6; i++){
 			for(int j = 1; j<6; j++){
-				platforms.add(new Platform(world, new Vector2(30*j, i*30), 6f));
+				platforms.add(new Platform(world, new Vector2(30*j, i*30), 6f, false));
 			}
 		}
 		
 		//generate ground platform with gap in the middle
-		platforms.add(new Platform(world, new Vector2(45, 10), 40f));
-		platforms.add(new Platform(world, new Vector2(145, 10), 40f));
+		platforms.add(new Platform(world, new Vector2(45, 10), 40f, true));
+		platforms.add(new Platform(world, new Vector2(145, 10), 40f, true));
 		
 		GameScreen.platforms = platforms;
 	}

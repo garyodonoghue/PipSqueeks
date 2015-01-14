@@ -23,11 +23,17 @@ public class Platform {
 	}
 
 	private float length;
+	private boolean basePlatform;
 	
-	public Platform(World world, Vector2 startPos, float length) {
+	public Platform(World world, Vector2 startPos, float length, boolean basePlatform) {
 		this.world = world;
 		this.length = length;
+		this.basePlatform = basePlatform;
 		createBody(startPos);
+	}
+
+	public boolean isBasePlatform() {
+		return basePlatform;
 	}
 
 	private void createBody(Vector2 position) {

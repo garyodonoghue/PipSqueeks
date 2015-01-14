@@ -43,6 +43,7 @@ public class GameScreen implements Screen {
 	private Texture feetRightTexture;
 	private Texture weaponTexture;
 	private Texture platformTexture;
+	private Texture basePlatformTexture;
 	
 	public  static List<Platform> platforms;
 
@@ -75,6 +76,8 @@ public class GameScreen implements Screen {
 		weaponTexture  = new Texture(Gdx.files.internal("emo_shoes_right.png"));
 
 		platformTexture = new Texture(Gdx.files.internal("platform.png"));
+		basePlatformTexture = new Texture(Gdx.files.internal("platform_base.png"));
+		
 		pipSqueaks = new ArrayList<PipSqueak>();
 		
 		myControllerListener = new MyControllerListener();
@@ -93,7 +96,7 @@ public class GameScreen implements Screen {
 		spriteBatch.setProjectionMatrix(camera.combined);
 
 		updatePipSqueakSprites();
-		//updatePlatformSprites();
+		updatePlatformSprites();
 		
 		world.step(Gdx.app.getGraphics().getDeltaTime(), 10, 10);
 		world.clearForces();
@@ -103,7 +106,12 @@ public class GameScreen implements Screen {
 
 	private void updatePlatformSprites() {
 		for(Platform platform : GameScreen.platforms){
-				updateSprite(new Sprite(platformTexture), spriteBatch, PIXELS_PER_METER, platform.getBody());
+				if(platform.isBasePlatform()){
+					updateSprite(new Sprite(basePlatformTexture), spriteBatch, PIXELS_PER_METER, platform.getBody());
+				}
+				else{
+					updateSprite(new Sprite(platformTexture), spriteBatch, PIXELS_PER_METER, platform.getBody());
+				}
 		}
 	}
 
@@ -111,17 +119,13 @@ public class GameScreen implements Screen {
 		for(PipSqueak pipSqueak : pipSqueaks){ //the order needs to go back foot, body, front foot, so that there is the correct perception  of depth
 			if(pipSqueak.facingRight){
 				updateSprite(new Sprite(new Sprite(weaponTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getWeapon().getWeaponBody());			
-
-				updateSprite(new Sprite(feetRightTexture), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
 				updateSprite(new Sprite(bodyRightTexture), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
-				updateSprite(new Sprite(feetRightTexture), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());		
+				updateSprite(new Sprite(feetRightTexture), spriteBatch, PIXELS_PER_METER, pipSqueak.getFoot());		
 			}
 			else{
 				updateSprite(new Sprite(new Sprite(weaponTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getWeapon().getWeaponBody());			
-				
-				updateSprite(new Sprite(new Sprite(feetLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getBackFoot());
 				updateSprite(new Sprite(new Sprite(bodyLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
-				updateSprite(new Sprite(new Sprite(feetLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFrontFoot());				
+				updateSprite(new Sprite(new Sprite(feetLeftTexture)), spriteBatch, PIXELS_PER_METER, pipSqueak.getFoot());				
 			}
 		}
 	}
