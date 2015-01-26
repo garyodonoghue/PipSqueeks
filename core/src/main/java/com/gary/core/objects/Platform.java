@@ -3,37 +3,27 @@ package com.gary.core.objects;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.gary.core.collision.CollisionInfo;
 import com.gary.core.collision.CollisionObjectType;
 
 public class Platform {
 
-	private final World world;
+	private final boolean basePlatform;
 	private Body body;
-	public Body getBody() {
-		return body;
-	}
+	private final float length;
 
-	public void setBody(Body body) {
-		this.body = body;
-	}
+	private final World world;
 
-	private float length;
-	private boolean basePlatform;
-	
-	public Platform(World world, Vector2 startPos, float length, boolean basePlatform) {
+	public Platform(World world, Vector2 startPos, float length,
+			boolean basePlatform) {
 		this.world = world;
 		this.length = length;
 		this.basePlatform = basePlatform;
 		createBody(startPos);
-	}
-
-	public boolean isBasePlatform() {
-		return basePlatform;
 	}
 
 	private void createBody(Vector2 position) {
@@ -43,7 +33,7 @@ public class Platform {
 		bodyDef.fixedRotation = true;
 
 		this.body = world.createBody(bodyDef);
-		
+
 		PolygonShape boxShape = new PolygonShape();
 		boxShape.setAsBox(length, 1.25f);
 
@@ -54,9 +44,22 @@ public class Platform {
 		fixtureDef.friction = 0.3f;
 
 		body.createFixture(fixtureDef);
-		
+
 		boxShape.dispose();
 
-		this.body.setUserData(new CollisionInfo("Hit platform", CollisionObjectType.Platform, this));
+		this.body.setUserData(new CollisionInfo("Hit platform",
+				CollisionObjectType.Platform, this));
+	}
+
+	public Body getBody() {
+		return body;
+	}
+
+	public boolean isBasePlatform() {
+		return basePlatform;
+	}
+
+	public void setBody(Body body) {
+		this.body = body;
 	}
 }

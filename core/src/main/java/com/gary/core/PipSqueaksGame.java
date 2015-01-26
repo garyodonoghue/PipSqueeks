@@ -13,23 +13,21 @@ public class PipSqueaksGame extends Game {
 
 	private GameScreen gameScreen;
 	private MenuScreen menuScreen;
-	
+
 	public int screenHeight = 1080;
 
 	public int screenWidth = 1920;
 	Texture texture;
 
 	@Override
-	public void create() 
-	{
+	public void create() {
 		createScreens();
 		setScreen(gameScreen);
-		//setScreen(menuScreen);
+		// setScreen(menuScreen);
 	}
-	
-	private void createScreens() 
-	{
+
+	private void createScreens() {
 		this.gameScreen = new GameScreen(this);
-		//this.menuScreen = new MenuScreen(this);
+		// this.menuScreen = new MenuScreen(this);
 	}
 }

@@ -1,4 +1,5 @@
 package com.gary.core.objects;
+
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -13,81 +14,120 @@ import com.gary.core.collision.CollisionHelper;
 import com.gary.core.collision.CollisionInfo;
 import com.gary.core.collision.CollisionObjectType;
 
-public class PipSqueak{
+public class PipSqueak {
 
-	private final World world;
-	float playerSize = 3f;
-	
-	private Body pipBody;
-	private Body foot;
-	
 	public CollisionHelper colHelper;
-	
+	private Controller controller;
+	public boolean facingRight = true;
+	private Feet feet;
 	private boolean isAirborn = false;
-	
+
+	private Body pipBody;
+
+	float playerSize = 3f;
+	private Weapon weapon;
+	private final World world;
+
+	public PipSqueak(World world, Vector2 startPos) {
+		this.world = world;
+		createBody(startPos);
+		createPipSqueakFeet();
+
+		colHelper = new CollisionHelper();
+
+		weapon = new Weapon(this.pipBody, world);
+	}
+
+	public void createFeetJointWhenFacingLeft(Vector2 pipBodyCenterPosition) {
+		RevoluteJointDef revoFootJoint = new RevoluteJointDef();
+
+		revoFootJoint.initialize(this.pipBody, this.getFoot().getBody(),
+				new Vector2(pipBodyCenterPosition.x + 3,
+						pipBodyCenterPosition.y - 1f));
+		revoFootJoint.collideConnected = true;
+		revoFootJoint.enableLimit = false;
+
+		world.createJoint(revoFootJoint);
+	}
+
+	public void createFeetJointWhenFacingRight(Vector2 pipBodyCenterPosition) {
+		RevoluteJointDef revoFootJoint = new RevoluteJointDef();
+
+		revoFootJoint.initialize(this.pipBody, this.getFeet().getBody(),
+				new Vector2(pipBodyCenterPosition.x - 3,
+						pipBodyCenterPosition.y - 1f));
+
+		revoFootJoint.collideConnected = false;
+		revoFootJoint.enableLimit = true;
+
+		world.createJoint(revoFootJoint);
+	}
+
+	public Controller getController() {
+		return controller;
+	}
+
+	public Feet getFeet() {
+		return feet;
+	}
+
+	public Feet getFoot() {
+		return feet;
+	}
+
+	public Body getPipBody() {
+		return pipBody;
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
 	public boolean isAirborn() {
 		return isAirborn;
+	}
+
+	public boolean isFacingRight() {
+		return facingRight;
+	}
+
+	public void jump() {
+		this.getPipBody().applyForce(new Vector2(0.0f, 100000.0f),
+				this.getPipBody().getWorldCenter(), true);
+	}
+
+	public void move(float direction) {
+		if (!isAirborn) { // disable movement whilst in the air
+			this.getPipBody()
+					.setLinearVelocity(new Vector2(direction * 10f, 0));
+		}
 	}
 
 	public void setAirborn(boolean isAirborn) {
 		this.isAirborn = isAirborn;
 	}
 
-	private Weapon weapon;
-	
-	public Weapon getWeapon() {
-		return weapon;
-	}
-
-	public void setWeapon(Weapon weapon) {
-		this.weapon = weapon;
-	}
-
-	private Controller controller;
-
-	public boolean facingRight = true;
-
-	public Body getPipBody() {
-		return pipBody;
-	}
-
-	public Body getFoot() {
-		return foot;
-	}
-	
-	public Controller getController() {
-		return controller;
-	}
-
 	public void setController(Controller controller) {
 		this.controller = controller;
-	}
-
-	
-	public boolean isFacingRight() {
-		return facingRight;
 	}
 
 	public void setFacingRight(boolean facingRight) {
 		this.facingRight = facingRight;
 	}
 
-	public PipSqueak(World world, Vector2 startPos) {
-		this.world = world;
-		createBody(startPos);
-		createPipSqueakFeet();
-		
-		colHelper = new CollisionHelper();
-		
-		weapon = new Weapon(this.pipBody, world);
+	public void setFeet(Feet feet) {
+		this.feet = feet;
+	}
+
+	public void setWeapon(Weapon weapon) {
+		this.weapon = weapon;
 	}
 
 	private void createBody(Vector2 position) {
 		// Dynamic Body
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position
-				.set(position.x, position.y);
+		bodyDef.position.set(position.x, position.y);
 
 		bodyDef.fixedRotation = true;
 		this.pipBody = world.createBody(bodyDef);
@@ -102,9 +142,10 @@ public class PipSqueak{
 		fixtureDef.shape = dynamicCircle;
 
 		this.pipBody.createFixture(fixtureDef);
-		dynamicCircle.dispose();		
-		
-		this.pipBody.setUserData(new CollisionInfo("Hit pip's body!", CollisionObjectType.PipSqueakBody, this));
+		dynamicCircle.dispose();
+
+		this.pipBody.setUserData(new CollisionInfo("Hit pip's body!",
+				CollisionObjectType.PipSqueakBody, this));
 	}
 
 	private void createPipSqueakFeet() {
@@ -112,11 +153,13 @@ public class PipSqueak{
 
 		BodyDef feetDef = new BodyDef();
 		feetDef.type = BodyType.DynamicBody;
-		feetDef.position.set(pipBodyCenterPosition.x, pipBodyCenterPosition.y-2.5f);
-		feetDef.fixedRotation = false; //want feet to be able to rotate
+		feetDef.position.set(pipBodyCenterPosition.x,
+				pipBodyCenterPosition.y - 2.5f);
+		feetDef.fixedRotation = false; // want feet to be able to rotate
 
-		this.foot = world.createBody(feetDef);
-		
+		this.feet = new Feet(this);
+		feet.setBody(world.createBody(feetDef));
+
 		FixtureDef fixtureDef = new FixtureDef();
 		PolygonShape boxShape = new PolygonShape();
 		boxShape.setAsBox(3f, 2.25f);
@@ -125,49 +168,22 @@ public class PipSqueak{
 		fixtureDef.density = 0.0f;
 		fixtureDef.friction = 0.3f;
 
-		foot.createFixture(fixtureDef);
-		
+		feet.getBody().createFixture(fixtureDef);
+
 		boxShape.dispose();
 
-		//create a joint at the point where the feet and body meet
-		//will need to dynamically destroy/create joints for when facing left/right and call respective left/right joint creation methods
-		if(facingRight){
+		// create a joint at the point where the feet and body meet
+		// will need to dynamically destroy/create joints for when facing
+		// left/right and call respective left/right joint creation methods
+		if (facingRight) {
 			createFeetJointWhenFacingRight(pipBodyCenterPosition);
-		}
-		else{
+		} else {
 			createFeetJointWhenFacingLeft(pipBodyCenterPosition);
 		}
-		
-		this.foot.setUserData(new CollisionInfo("Hit foot", CollisionObjectType.PipSqueakFeet, this));
-	}
 
-	public void createFeetJointWhenFacingLeft(Vector2 pipBodyCenterPosition) {
-		RevoluteJointDef revoFootJoint = new RevoluteJointDef();
-
-		revoFootJoint.initialize(this.pipBody, this.foot, new Vector2(pipBodyCenterPosition.x+3, pipBodyCenterPosition.y-1f)); 
-		revoFootJoint.collideConnected = true;
-		revoFootJoint.enableLimit = false;
-
-		world.createJoint(revoFootJoint);
-	}
-	
-	public void createFeetJointWhenFacingRight(Vector2 pipBodyCenterPosition) {
-		RevoluteJointDef revoFootJoint = new RevoluteJointDef();
-		
-		revoFootJoint.initialize(this.pipBody, this.foot, new Vector2(pipBodyCenterPosition.x-3, pipBodyCenterPosition.y-1f)); 		
-		
-		revoFootJoint.collideConnected = false;
-		revoFootJoint.enableLimit = true;
-
-		world.createJoint(revoFootJoint);
-	}
-	
-	public void jump(){
-		this.getPipBody().applyForce(new Vector2(0.0f, 100000.0f), this.getPipBody().getWorldCenter() , true );
-	}
-
-	public void move(float direction) {
-		this.getPipBody().setLinearVelocity(new Vector2(direction * 10f, 0));
+		this.feet.getBody().setUserData(
+				new CollisionInfo("Hit foot",
+						CollisionObjectType.PipSqueakFeet, this));
 	}
 
 }

@@ -1,5 +1,5 @@
 package com.gary.core.collision;
 
 public enum CollisionObjectType {
-	PipSqueakBody, PipSqueakFeet, Weapon, Wall, Platform, Bullet
+	Bullet, PipSqueakBody, PipSqueakFeet, Platform, Wall, Weapon
 }

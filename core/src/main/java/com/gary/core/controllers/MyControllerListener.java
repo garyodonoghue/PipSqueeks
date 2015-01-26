@@ -6,7 +6,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.gary.core.objects.PipSqueak;
 import com.gary.core.screens.GameScreen;
 
-public class MyControllerListener implements com.badlogic.gdx.controllers.ControllerListener{
+public class MyControllerListener implements
+		com.badlogic.gdx.controllers.ControllerListener {
 
 	@Override
 	public boolean accelerometerMoved(Controller arg0, int arg1, Vector3 arg2) {
@@ -16,56 +17,54 @@ public class MyControllerListener implements com.badlogic.gdx.controllers.Contro
 
 	@Override
 	public boolean axisMoved(Controller controller, int axisCode, float value) {
-		//left analog
-		if(axisCode == Xbox360Pad.AXIS_LEFT_X){
-			for(PipSqueak pip : GameScreen.pipSqueaks){
-				if(pip.getController() == controller){
-					if(value<=0){
+		// left analog
+		if (axisCode == Xbox360Pad.AXIS_LEFT_X) {
+			for (PipSqueak pip : GameScreen.pipSqueaks) {
+				if (pip.getController() == controller) {
+					if (value <= 0) {
 						pip.setFacingRight(false);
-					}
-					else{
+					} else {
 						pip.setFacingRight(true);
 					}
 					pip.move(value);
 				}
 			}
 		}
-		
-		//TODO: right analogue - used for aiming
-		if(axisCode == Xbox360Pad.AXIS_RIGHT_X){
-			for(PipSqueak pip : GameScreen.pipSqueaks){
-				if(pip.getController() == controller){
+
+		// TODO: right analogue - used for aiming
+		if (axisCode == Xbox360Pad.AXIS_RIGHT_X) {
+			for (PipSqueak pip : GameScreen.pipSqueaks) {
+				if (pip.getController() == controller) {
 					pip.getWeapon().changeAim(value);
 				}
 			}
 		}
-				
-		
+
 		return false;
 	}
 
 	@Override
 	public boolean buttonDown(Controller controller, int buttonCode) {
-		
-		//jump
-		if(buttonCode == Xbox360Pad.BUTTON_A){
-			//get pip assigned to controller and call jump()
-			for(PipSqueak pip : GameScreen.pipSqueaks){
-				if(pip.getController() == controller){
+
+		// jump
+		if (buttonCode == Xbox360Pad.BUTTON_A) {
+			// get pip assigned to controller and call jump()
+			for (PipSqueak pip : GameScreen.pipSqueaks) {
+				if (pip.getController() == controller) {
 					pip.jump();
 				}
 			}
 		}
-		
-		//shoot
-		if(buttonCode == Xbox360Pad.AXIS_RIGHT_TRIGGER){
-			for(PipSqueak pip : GameScreen.pipSqueaks){
-				if(pip.getController() == controller){
+
+		// shoot
+		if (buttonCode == Xbox360Pad.AXIS_RIGHT_TRIGGER) {
+			for (PipSqueak pip : GameScreen.pipSqueaks) {
+				if (pip.getController() == controller) {
 					pip.getWeapon().shoot();
 				}
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -78,13 +77,13 @@ public class MyControllerListener implements com.badlogic.gdx.controllers.Contro
 	@Override
 	public void connected(Controller arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void disconnected(Controller arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
