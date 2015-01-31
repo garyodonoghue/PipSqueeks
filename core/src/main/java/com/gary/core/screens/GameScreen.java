@@ -16,12 +16,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.gary.core.LevelGenerator;
 import com.gary.core.PipSqueaksGame;
 import com.gary.core.collision.CollisionHelper;
 import com.gary.core.controllers.MyControllerListener;
 import com.gary.core.objects.PipSqueak;
 import com.gary.core.objects.Platform;
+import com.gary.core.screens.hud.HealthBar;
 
 public class GameScreen implements Screen {
 
@@ -46,6 +48,7 @@ public class GameScreen implements Screen {
 	private final int screenHeight;
 	private final int screenWidth;
 	private final SpriteBatch spriteBatch;
+	private final Stage stage = new Stage();
 
 	private final Texture weaponLeftTexture;
 	private final Texture weaponRightTexture;
@@ -55,6 +58,8 @@ public class GameScreen implements Screen {
 	private final int worldHeight;
 
 	private final int worldWidth;
+
+	private HealthBar healthBar;
 
 	public GameScreen(PipSqueaksGame game) {
 		this.game = game;
@@ -133,6 +138,14 @@ public class GameScreen implements Screen {
 		world.clearForces();
 
 		this.spriteBatch.end();
+
+		// TODO move this to collision helper for the bullet/pipsqueak collision
+		// - pass in damage value depending on gun
+		this.healthBar.damageHealth();
+
+		stage.act(delta);
+		stage.draw();
+
 	}
 
 	@Override
@@ -156,6 +169,11 @@ public class GameScreen implements Screen {
 		createAndAssignPipsToControllers();
 
 		world.setContactListener(new CollisionHelper());
+
+		healthBar = new HealthBar();
+		healthBar.setPosition(30, 750);
+		healthBar.setSize(100, 30);
+		stage.addActor(healthBar);
 	}
 
 	private void createAndAssignPipsToControllers() {
