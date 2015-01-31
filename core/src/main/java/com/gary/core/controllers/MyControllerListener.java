@@ -32,7 +32,7 @@ public class MyControllerListener implements
 		}
 
 		// TODO: right analogue - used for aiming
-		if (axisCode == Xbox360Pad.AXIS_RIGHT_X) {
+		if (axisCode == Xbox360Pad.AXIS_RIGHT_Y) {
 			for (PipSqueak pip : GameScreen.pipSqueaks) {
 				if (pip.getController() == controller) {
 					pip.getWeapon().changeAim(value);

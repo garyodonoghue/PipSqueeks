@@ -20,7 +20,7 @@ public class PipSqueak {
 	private Controller controller;
 	public boolean facingRight = true;
 	private Feet feet;
-	private boolean isAirborn = false;
+	private Boolean airborn;
 
 	private Body pipBody;
 
@@ -35,7 +35,7 @@ public class PipSqueak {
 
 		colHelper = new CollisionHelper();
 
-		weapon = new Weapon(this.pipBody, world);
+		weapon = new Weapon(this, world);
 	}
 
 	public void createFeetJointWhenFacingLeft(Vector2 pipBodyCenterPosition) {
@@ -83,8 +83,13 @@ public class PipSqueak {
 		return weapon;
 	}
 
+	// handles null case for airborne Boolean object - defaults to false
 	public boolean isAirborn() {
-		return isAirborn;
+		if (this.airborn != null && this.airborn != Boolean.FALSE) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean isFacingRight() {
@@ -92,19 +97,22 @@ public class PipSqueak {
 	}
 
 	public void jump() {
-		this.getPipBody().applyForce(new Vector2(0.0f, 100000.0f),
+		this.getPipBody().applyForce(new Vector2(0.0f, 330000.0f),
 				this.getPipBody().getWorldCenter(), true);
 	}
 
 	public void move(float direction) {
-		if (!isAirborn) { // disable movement whilst in the air
-			this.getPipBody()
-					.setLinearVelocity(new Vector2(direction * 10f, 0));
+		if (!isAirborn()) { // disable movement whilst in the air
+			this.getPipBody().applyForce(new Vector2(direction * 34000f, 0),
+					this.getFeet().getBody().getWorldCenter(), true);
+		} else {
+			this.getPipBody().applyForce(new Vector2(direction * 10000f, 0),
+					this.getPipBody().getWorldCenter(), true);
 		}
 	}
 
 	public void setAirborn(boolean isAirborn) {
-		this.isAirborn = isAirborn;
+		this.airborn = isAirborn;
 	}
 
 	public void setController(Controller controller) {
@@ -165,7 +173,7 @@ public class PipSqueak {
 		boxShape.setAsBox(3f, 2.25f);
 		fixtureDef.shape = boxShape;
 		fixtureDef.restitution = 0.3f;
-		fixtureDef.density = 0.0f;
+		fixtureDef.density = 0.5f;
 		fixtureDef.friction = 0.3f;
 
 		feet.getBody().createFixture(fixtureDef);
@@ -183,7 +191,7 @@ public class PipSqueak {
 
 		this.feet.getBody().setUserData(
 				new CollisionInfo("Hit foot",
-						CollisionObjectType.PipSqueakFeet, this));
+						CollisionObjectType.PipSqueakFeet, feet));
 	}
 
 }

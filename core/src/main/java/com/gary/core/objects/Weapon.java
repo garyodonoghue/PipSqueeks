@@ -13,34 +13,25 @@ import com.gary.core.collision.CollisionObjectType;
 
 public class Weapon {
 
-	private final Body pipBody;
+	private final PipSqueak pipSqueak;
 	private final Vector2 pipBodyCenter;
+
 	private Body weaponBody;
 	private final World world;
 
-	public Weapon(Body pipBody, World world) {
-		pipBodyCenter = pipBody.getWorldCenter();
+	public Weapon(PipSqueak pipSqueak, World world) {
+		pipBodyCenter = pipSqueak.getPipBody().getWorldCenter();
 		this.world = world;
-		this.pipBody = pipBody;
+		this.pipSqueak = pipSqueak;
 		this.createWeaponSensor();
 	}
 
 	public void changeAim(float value) {
-		// TODO Need to rotate the weapon until it gets to direction analog
-		// stick is pointing
-		this.getWeaponBody().setAngularVelocity(value);
-
-	}
-
-	private void createWeaponJoint() {
-		RevoluteJointDef weaponJoint = new RevoluteJointDef();
-
-		weaponJoint.initialize(this.pipBody, this.weaponBody, new Vector2(
-				pipBodyCenter.x + 3, pipBodyCenter.y - 1f));
-		weaponJoint.collideConnected = true;
-		weaponJoint.enableLimit = false;
-
-		world.createJoint(weaponJoint);
+		if (this.pipSqueak.isFacingRight()) {
+			this.getWeaponBody().setAngularVelocity(-value);
+		} else {
+			this.getWeaponBody().setAngularVelocity(value);
+		}
 	}
 
 	public void createWeaponSensor() {
@@ -51,6 +42,7 @@ public class Weapon {
 		weaponSensorDef.position.set(pipBodyCenter.x, pipBodyCenter.y);
 		weaponSensorDef.fixedRotation = false; // want to be able to 'rotate'
 												// the gun when aiming
+		weaponSensorDef.gravityScale = 0;
 
 		this.weaponBody = world.createBody(weaponSensorDef);
 
@@ -81,7 +73,27 @@ public class Weapon {
 	public void shoot() {
 		Bullet bullet = new Bullet(this.getWeaponBody(), world);
 		// TODO Use the gun's angle to determine the trajectory of the bullet
-		bullet.getBulletBody().setLinearVelocity(new Vector2(1000f, 10000f));
+		float gunAngle = this.getWeaponBody().getAngle();
+		float xComponent = (float) (1000 * Math.cos(gunAngle));
+		float yComponent = (float) (-1000 * Math.sin(gunAngle));
+
+		if (pipSqueak.facingRight) {
+			bullet.getBulletBody().setLinearVelocity(xComponent, yComponent);
+		} else { // negate the x component when faclng left as the bullets would
+					// come out the back of the gun otherwise
+			bullet.getBulletBody().setLinearVelocity(-xComponent, yComponent);
+		}
+	}
+
+	private void createWeaponJoint() {
+		RevoluteJointDef weaponJoint = new RevoluteJointDef();
+
+		weaponJoint.initialize(this.pipSqueak.getPipBody(), this.weaponBody,
+				new Vector2(pipBodyCenter.x + 3, pipBodyCenter.y - 1f));
+		weaponJoint.collideConnected = true;
+		weaponJoint.enableLimit = false;
+
+		world.createJoint(weaponJoint);
 	}
 
 }

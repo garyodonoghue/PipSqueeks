@@ -21,13 +21,10 @@ public class Bullet {
 		this.world = world;
 
 		BodyDef bulletDef = new BodyDef();
-		bulletDef.type = BodyType.StaticBody;
+		bulletDef.type = BodyType.KinematicBody;
 
-		// TODO want to position this at 'shoulder height'
-		bulletDef.position.set(weaponBody.getWorldCenter().x - 10,
-				weaponBody.getWorldCenter().y + 10);
-		bulletDef.fixedRotation = true; // want to be able to 'rotate' the gun
-										// when aiming
+		bulletDef.position.set(weaponBody.getWorldCenter().x,
+				weaponBody.getWorldCenter().y);
 
 		this.bulletBody = this.world.createBody(bulletDef);
 
@@ -35,7 +32,7 @@ public class Bullet {
 		PolygonShape boxShape = new PolygonShape();
 		boxShape.setAsBox(0.25f, 0.25f);
 		fixtureDef.shape = boxShape;
-		fixtureDef.isSensor = false;
+		fixtureDef.isSensor = true;
 
 		bulletBody.createFixture(fixtureDef);
 

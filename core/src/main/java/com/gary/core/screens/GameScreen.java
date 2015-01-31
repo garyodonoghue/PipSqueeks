@@ -47,7 +47,8 @@ public class GameScreen implements Screen {
 	private final int screenWidth;
 	private final SpriteBatch spriteBatch;
 
-	private final Texture weaponTexture;
+	private final Texture weaponLeftTexture;
+	private final Texture weaponRightTexture;
 
 	private World world;
 
@@ -80,7 +81,9 @@ public class GameScreen implements Screen {
 		feetRightTexture = new Texture(
 				Gdx.files.internal("emo_shoes_right.png"));
 
-		weaponTexture = new Texture(Gdx.files.internal("emo_shoes_right.png"));
+		weaponRightTexture = new Texture(
+				Gdx.files.internal("bazooka_right.png"));
+		weaponLeftTexture = new Texture(Gdx.files.internal("bazooka_left.png"));
 
 		platformTexture = new Texture(Gdx.files.internal("platform.png"));
 		basePlatformTexture = new Texture(
@@ -112,7 +115,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+		// set background colour to sky blue
+		Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		debugRenderer.render(world, camera.combined.scale(PIXELS_PER_METER,
@@ -145,7 +149,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		world = new World(new Vector2(0.0f, -50.0f), true);
+		world = new World(new Vector2(0.0f, -120.0f), true);
 
 		LevelGenerator.generateLevel(world);
 
@@ -176,21 +180,22 @@ public class GameScreen implements Screen {
 													// correct perception of
 													// depth
 			if (pipSqueak.facingRight) {
-				updateSprite(new Sprite(new Sprite(weaponTexture)),
+				updateSprite(new Sprite(new Sprite(weaponRightTexture)),
 						spriteBatch, PIXELS_PER_METER, pipSqueak.getWeapon()
 								.getWeaponBody());
 				updateSprite(new Sprite(bodyRightTexture), spriteBatch,
 						PIXELS_PER_METER, pipSqueak.getPipBody());
 				updateSprite(new Sprite(feetRightTexture), spriteBatch,
-						PIXELS_PER_METER, pipSqueak.getFoot());
+						PIXELS_PER_METER, pipSqueak.getFoot().getBody());
 			} else {
-				updateSprite(new Sprite(new Sprite(weaponTexture)),
+				updateSprite(new Sprite(new Sprite(weaponLeftTexture)),
 						spriteBatch, PIXELS_PER_METER, pipSqueak.getWeapon()
 								.getWeaponBody());
 				updateSprite(new Sprite(new Sprite(bodyLeftTexture)),
 						spriteBatch, PIXELS_PER_METER, pipSqueak.getPipBody());
 				updateSprite(new Sprite(new Sprite(feetLeftTexture)),
-						spriteBatch, PIXELS_PER_METER, pipSqueak.getFoot());
+						spriteBatch, PIXELS_PER_METER, pipSqueak.getFoot()
+								.getBody());
 			}
 		}
 	}
