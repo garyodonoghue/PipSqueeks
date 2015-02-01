@@ -50,22 +50,6 @@ public class MenuScreen implements Screen {
 		this.camera.setToOrtho(false, this.screenWidth, screenHeight);
 	}
 
-	private void blinkText() {
-		if (blinkDelta > 0.5) {
-			blinkDelta = 0;
-
-			for (int i = numberOfPlayers; i < stage.getActors().size; i++) {
-				Actor actor = stage.getActors().get(i);
-
-				if (actor.isVisible()) {
-					actor.setVisible(false);
-				} else {
-					actor.setVisible(true);
-				}
-			}
-		}
-	}
-
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
@@ -82,36 +66,6 @@ public class MenuScreen implements Screen {
 	public void pause() {
 		// TODO Auto-generated method stub
 
-	}
-
-	private void pollControllers() {
-		for (Controller controller : Controllers.getControllers()) {
-			Gdx.app.log("controller connected with name: ",
-					controller.getName());
-
-			// check if player pressed the start button, create and assign a new
-			// player
-			if (controller.getButton(Xbox360Pad.BUTTON_START)) {
-				Gdx.app.log("Start button pressed", "");
-				Gdx.app.log("Number of connected controllers: ", ""
-						+ Controllers.getControllers().size);
-
-				Player player = new Player(controller);
-				if (listPlayers.contains(player)) {
-					break;
-				}
-				numberOfPlayers += 1;
-				listPlayers.add(player);
-			}
-
-			if (controller.getButton(Xbox360Pad.BUTTON_A)) {
-				Gdx.app.log("A button pressed", "");
-				Gdx.app.log("Start button pressed", "");
-
-				this.characterSelectScreen = new CharacterSelectScreen();
-				this.characterSelectScreen.setNumberOfPlayers(numberOfPlayers);
-			}
-		}
 	}
 
 	@Override
@@ -152,7 +106,7 @@ public class MenuScreen implements Screen {
 		stage.addActor(welcomeLabel);
 
 		// add the player identifiers in each corner, which will blink
-		Label P1 = new Label("P1" + PRESS_START, skin);
+		Label P1 = new Label("P1", skin);
 
 		P1.setFontScale(2);
 		P1.setX(10);
@@ -189,6 +143,52 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void show() {
+	}
+
+	private void blinkText() {
+		if (blinkDelta > 0.5) {
+			blinkDelta = 0;
+
+			for (int i = numberOfPlayers; i < stage.getActors().size; i++) {
+				Actor actor = stage.getActors().get(i);
+
+				if (actor.isVisible()) {
+					actor.setVisible(false);
+				} else {
+					actor.setVisible(true);
+				}
+			}
+		}
+	}
+
+	private void pollControllers() {
+		for (Controller controller : Controllers.getControllers()) {
+			Gdx.app.log("controller connected with name: ",
+					controller.getName());
+
+			// check if player pressed the start button, create and assign a new
+			// player
+			if (controller.getButton(Xbox360Pad.BUTTON_START)) {
+				Gdx.app.log("Start button pressed", "");
+				Gdx.app.log("Number of connected controllers: ", ""
+						+ Controllers.getControllers().size);
+
+				Player player = new Player(controller);
+				if (listPlayers.contains(player)) {
+					break;
+				}
+				numberOfPlayers += 1;
+				listPlayers.add(player);
+			}
+
+			if (controller.getButton(Xbox360Pad.BUTTON_A)) {
+				Gdx.app.log("A button pressed", "");
+				Gdx.app.log("Start button pressed", "");
+
+				this.characterSelectScreen = new CharacterSelectScreen();
+				this.characterSelectScreen.setNumberOfPlayers(numberOfPlayers);
+			}
+		}
 	}
 
 }

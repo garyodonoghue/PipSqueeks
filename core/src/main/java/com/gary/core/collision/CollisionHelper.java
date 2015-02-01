@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.gary.core.objects.Feet;
+import com.gary.core.objects.PipSqueak;
 
 public class CollisionHelper implements ContactListener {
 
@@ -49,6 +50,7 @@ public class CollisionHelper implements ContactListener {
 		CollisionInfo bodyAInfo = getCollisionInfoFromFixture(fixtureA);
 		CollisionInfo bodyBInfo = getCollisionInfoFromFixture(fixtureB);
 
+		// collision between platforms and pip body/feet
 		if (bodyAInfo != null && bodyBInfo != null) {
 			if (bodyAInfo.type == CollisionObjectType.PipSqueakFeet) {
 				if (bodyBInfo.type == CollisionObjectType.Platform) {
@@ -66,6 +68,45 @@ public class CollisionHelper implements ContactListener {
 
 					Feet feet = (Feet) bodyBInfo.object;
 					feet.getPip().setAirborn(true);
+				}
+			}
+
+			// collision between bullet and pips
+			if (bodyAInfo.type == CollisionObjectType.PipSqueakFeet) {
+				if (bodyBInfo.type == CollisionObjectType.Bullet) {
+					Gdx.app.log("endContact", bodyAInfo.text + " & "
+							+ bodyBInfo.text);
+
+					Feet feet = (Feet) bodyAInfo.object;
+					feet.getPip().getHealthBar().damageHealth();
+				}
+			}
+			if (bodyAInfo.type == CollisionObjectType.Bullet) {
+				if (bodyBInfo.type == CollisionObjectType.PipSqueakFeet) {
+					Gdx.app.log("endContact", bodyBInfo.text + " & "
+							+ bodyAInfo.text);
+
+					Feet feet = (Feet) bodyBInfo.object;
+					feet.getPip().getHealthBar().damageHealth();
+				}
+			}
+
+			if (bodyAInfo.type == CollisionObjectType.PipSqueakBody) {
+				if (bodyBInfo.type == CollisionObjectType.Bullet) {
+					Gdx.app.log("endContact", bodyAInfo.text + " & "
+							+ bodyBInfo.text);
+
+					PipSqueak pip = (PipSqueak) bodyAInfo.object;
+					pip.getHealthBar().damageHealth();
+				}
+			}
+			if (bodyAInfo.type == CollisionObjectType.Bullet) {
+				if (bodyBInfo.type == CollisionObjectType.PipSqueakBody) {
+					Gdx.app.log("endContact", bodyBInfo.text + " & "
+							+ bodyAInfo.text);
+
+					PipSqueak pip = (PipSqueak) bodyBInfo.object;
+					pip.getHealthBar().damageHealth();
 				}
 			}
 		}

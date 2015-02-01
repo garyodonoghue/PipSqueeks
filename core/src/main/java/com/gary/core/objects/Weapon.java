@@ -39,7 +39,7 @@ public class Weapon {
 		weaponSensorDef.type = BodyType.DynamicBody;
 
 		// TODO want to position this at 'shoulder height'
-		weaponSensorDef.position.set(pipBodyCenter.x, pipBodyCenter.y);
+		weaponSensorDef.position.set(pipBodyCenter.x + 1, pipBodyCenter.y + 2);
 		weaponSensorDef.fixedRotation = false; // want to be able to 'rotate'
 												// the gun when aiming
 		weaponSensorDef.gravityScale = 0;
@@ -75,13 +75,13 @@ public class Weapon {
 		// TODO Use the gun's angle to determine the trajectory of the bullet
 		float gunAngle = this.getWeaponBody().getAngle();
 		float xComponent = (float) (1000 * Math.cos(gunAngle));
-		float yComponent = (float) (-1000 * Math.sin(gunAngle));
+		float yComponent = (float) (1000 * Math.sin(gunAngle));
 
 		if (pipSqueak.facingRight) {
 			bullet.getBulletBody().setLinearVelocity(xComponent, yComponent);
 		} else { // negate the x component when faclng left as the bullets would
 					// come out the back of the gun otherwise
-			bullet.getBulletBody().setLinearVelocity(-xComponent, yComponent);
+			bullet.getBulletBody().setLinearVelocity(-xComponent, -yComponent);
 		}
 	}
 
@@ -89,7 +89,7 @@ public class Weapon {
 		RevoluteJointDef weaponJoint = new RevoluteJointDef();
 
 		weaponJoint.initialize(this.pipSqueak.getPipBody(), this.weaponBody,
-				new Vector2(pipBodyCenter.x + 3, pipBodyCenter.y - 1f));
+				new Vector2(pipBodyCenter.x, pipBodyCenter.y + 1));
 		weaponJoint.collideConnected = true;
 		weaponJoint.enableLimit = false;
 

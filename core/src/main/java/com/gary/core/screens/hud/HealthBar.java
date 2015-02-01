@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 public class HealthBar extends Actor {
@@ -15,7 +17,11 @@ public class HealthBar extends Actor {
 
 	float health;
 
-	public HealthBar() {
+	private final int playerNumber;
+
+	Label playerLabel;
+
+	public HealthBar(int playerNumber, int screenWidth) {
 		TextureAtlas skinAtlas = new TextureAtlas(
 				Gdx.files.internal("uiskin.atlas"));
 		NinePatch loadingBarBackgroundPatch = new NinePatch(
@@ -25,6 +31,13 @@ public class HealthBar extends Actor {
 		healthBar = new NinePatchDrawable(loadingBarPatch);
 		healthBarBackground = new NinePatchDrawable(loadingBarBackgroundPatch);
 		health = 1f;
+
+		this.playerNumber = playerNumber;
+
+		Skin skin = new Skin(Gdx.files.internal("defaultskin.json"));
+		playerLabel = new Label("Player " + playerNumber, skin);
+		playerLabel.setFontScale(2);
+		playerLabel.setY(800);
 	}
 
 	public void damageHealth() {
@@ -46,5 +59,7 @@ public class HealthBar extends Actor {
 			healthBar.draw(batch, getX(), getY(), health * getWidth()
 					* getScaleX(), getHeight() * getScaleY());
 		}
+
+		this.playerLabel.draw(batch, getX());
 	}
 }

@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.gary.core.collision.CollisionHelper;
 import com.gary.core.collision.CollisionInfo;
 import com.gary.core.collision.CollisionObjectType;
+import com.gary.core.screens.hud.HealthBar;
 
 public class PipSqueak {
 
@@ -28,8 +29,11 @@ public class PipSqueak {
 	private Weapon weapon;
 	private final World world;
 
-	public PipSqueak(World world, Vector2 startPos) {
+	private final HealthBar healthBar;
+
+	public PipSqueak(World world, Vector2 startPos, HealthBar healthBar) {
 		this.world = world;
+		this.healthBar = healthBar;
 		createBody(startPos);
 		createPipSqueakFeet();
 
@@ -73,6 +77,10 @@ public class PipSqueak {
 
 	public Feet getFoot() {
 		return feet;
+	}
+
+	public HealthBar getHealthBar() {
+		return healthBar;
 	}
 
 	public Body getPipBody() {

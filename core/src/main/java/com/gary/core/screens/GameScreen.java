@@ -59,8 +59,6 @@ public class GameScreen implements Screen {
 
 	private final int worldWidth;
 
-	private HealthBar healthBar;
-
 	public GameScreen(PipSqueaksGame game) {
 		this.game = game;
 
@@ -139,10 +137,6 @@ public class GameScreen implements Screen {
 
 		this.spriteBatch.end();
 
-		// TODO move this to collision helper for the bullet/pipsqueak collision
-		// - pass in damage value depending on gun
-		this.healthBar.damageHealth();
-
 		stage.act(delta);
 		stage.draw();
 
@@ -169,11 +163,6 @@ public class GameScreen implements Screen {
 		createAndAssignPipsToControllers();
 
 		world.setContactListener(new CollisionHelper());
-
-		healthBar = new HealthBar();
-		healthBar.setPosition(30, 750);
-		healthBar.setSize(100, 30);
-		stage.addActor(healthBar);
 	}
 
 	private void createAndAssignPipsToControllers() {
@@ -183,8 +172,16 @@ public class GameScreen implements Screen {
 
 		if (Controllers.getControllers() != null) {
 			for (int i = 0; i < Controllers.getControllers().size; i++) {
+
+				HealthBar healthBar = new HealthBar(i, this.screenWidth);
+				healthBar.setPosition(30, 750); // TODO get position from map of
+				// health bar position
+				healthBar.setSize(100, 30);
+				stage.addActor(healthBar);
+
 				// move this into assignControllers() method
-				PipSqueak pip = new PipSqueak(this.world, new Vector2(50, 50));
+				PipSqueak pip = new PipSqueak(this.world, new Vector2(50, 50),
+						healthBar);
 				pip.setController(Controllers.getControllers().get(i));
 				pipSqueaks.add(pip);
 			}
