@@ -57,7 +57,9 @@ public class MyControllerListener implements
 		}
 
 		// shoot
-		if (buttonCode == Xbox360Pad.AXIS_RIGHT_TRIGGER) {
+		// TODO Trigger isnt getting recognised in debug mode, have to use the
+		// 'R1' button instead
+		if (buttonCode == Xbox360Pad.BUTTON_RB) {
 			for (PipSqueak pip : GameScreen.pipSqueaks) {
 				if (pip.getController() == controller) {
 					pip.getWeapon().shoot();
